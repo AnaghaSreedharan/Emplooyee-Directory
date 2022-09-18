@@ -1,9 +1,5 @@
 class ApiConfigs {
-  // ignore: non_constant_identifier_names
-  static String BASE_URL = "http://www.mocky.io/";
-  // ignore: non_constant_identifier_names
-  static String API_URL = BASE_URL + "v2/";
-  static String IMAGE_URL = "http://www.mocky.io/";
+  static String API_URL = "http://www.mocky.io/v2/";
 }
 
 class ApiEndPoints {
