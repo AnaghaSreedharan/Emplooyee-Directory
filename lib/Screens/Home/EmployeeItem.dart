@@ -28,7 +28,7 @@ class EmployeeItem extends StatelessWidget {
             child: Container(
                 padding: const EdgeInsets.all(18),
                 // width: double.infinity,
-                color: primeGreen.withOpacity(0.1),
+                color: colorPrimary.withOpacity(0.1),
                 child: Row(
                   children: [
                     ClipRRect(

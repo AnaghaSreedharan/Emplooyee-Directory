@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../Models/EmployeeDbModel.dart';
 import '../../Resource/Strings.dart';
@@ -9,9 +12,22 @@ class EmployeeDetails extends StatelessWidget {
   const EmployeeDetails({Key? key, required this.data}) : super(key: key);
   final EmployeeDbModel data;
 
+
   @override
   Widget build(BuildContext context) {
     const double verticalGap = 20;
+
+    LatLng latlng =  LatLng(double.parse(data.latitude!), double.parse(data.longitude!));
+    final Completer<GoogleMapController> _controller = Completer();
+    Set<Marker> markers = {
+      Marker(
+          markerId: MarkerId('"1"'),
+          position: latlng,
+          infoWindow: InfoWindow(
+              title: 'The title of the marker'
+          )
+      )
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -269,6 +285,50 @@ class EmployeeDetails extends StatelessWidget {
                     ),
                   ],
                 )),
+            const SizedBox(
+              height: 10,
+            ),
+            Card(
+                elevation: 5,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(
+                      height: verticalGap,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: const Text(
+                        "Location",
+                        style: TextStyle(
+                            fontFamily: 'Poppins-Regular',
+                            fontSize: 14,
+                            color: textColor,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                        width: double.infinity,
+                        height: 220,
+                        color: colorPrimary,
+                        child: GoogleMap(
+                          markers: markers,
+                          initialCameraPosition: CameraPosition(target: latlng, zoom: 10.0),
+                          mapType: MapType.normal,
+                          zoomControlsEnabled: false,
+                          onMapCreated: (GoogleMapController controller) {
+                            _controller.complete(controller);
+                          },
+                        )),
+                  ],
+                )),
+
+
             const SizedBox(
               height: 10,
             ),
