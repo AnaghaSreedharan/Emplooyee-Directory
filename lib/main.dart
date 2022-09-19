@@ -1,5 +1,7 @@
+import 'package:employee_app/providers/api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Resource/colors.dart';
@@ -7,7 +9,14 @@ import 'Screens/Home/Home.dart';
 import 'Screens/Splash/Splash.dart';
 
 void main() {
-  runApp(const MyApp());
+
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GetDataProvider>(create: (_) => GetDataProvider()),
+        ],
+        child: const MyApp(),
+      ));
 }
 
 class MyApp extends StatelessWidget {

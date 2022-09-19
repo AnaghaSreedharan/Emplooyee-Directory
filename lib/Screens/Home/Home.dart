@@ -1,12 +1,9 @@
-import 'dart:io';
-
-import 'package:employee_app/Models/EmployeeModel.dart';
-import 'package:employee_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../Models/EmployeeDbModel.dart';
 import '../../Resource/Strings.dart';
-import '../../Services/EmployeeService.dart';
+import '../../providers/api_provider.dart';
 import '../../providers/db_provider.dart';
 import 'EmployeeItem.dart';
 
@@ -55,9 +52,9 @@ class _HomeState extends State<Home> {
             size: 23,
           ),
           onPressed: () {
+            _searchQuery.clear();
             _searchText = "";
-            _searchQuery.text = "";
-            setState(() {});
+            filteredList = list;
           },
         );
 
@@ -66,25 +63,16 @@ class _HomeState extends State<Home> {
     });
   }
 
-  List<EmployeeModel> employeeList = [];
-
-  getEmployeeList() async {
-    try {
-      employeeList = await EmployeeService.getEmployeeList();
-      // showToast(employeeList.length.toString());
-    } catch (e) {
-      showErrorMessage(e);
-    }
-  }
-
   @override
   void initState() {
-    getEmployeeList();
+    final getData = Provider.of<GetDataProvider>(context, listen: false);
+    getData.getData(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final getDataProvider = Provider.of<GetDataProvider>(context);
     return Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
@@ -92,8 +80,6 @@ class _HomeState extends State<Home> {
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
-              Navigator.pop(context);
-
             },
             child: const Icon(
               Icons.arrow_back_ios,
@@ -110,32 +96,19 @@ class _HomeState extends State<Home> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _searchBox(),
-            Expanded(child: _buildEmployeeListView())
-          ],
-        )
-
-/*
-      Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            ListView.builder(
-              itemCount: 5,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return PatientItem();
-              },
-            )
-          ],
-        ),
-      ),
-*/
+        body: getDataProvider.loading
+            ? Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _searchBox(),
+                  Expanded(child: _buildEmployeeListView())
+                ],
+              )
         );
   }
 
@@ -154,10 +127,7 @@ class _HomeState extends State<Home> {
             filteredList = list;
             doItJustOnce = !doItJustOnce; //this line helps to do just once.
           }
-          return ListView.separated(
-            separatorBuilder: (context, index) => const Divider(
-              color: Colors.black12,
-            ),
+          return ListView.builder(
             itemCount: filteredList.length,
             itemBuilder: (BuildContext context, int index) {
               return EmployeeItem(data: filteredList[index]);
