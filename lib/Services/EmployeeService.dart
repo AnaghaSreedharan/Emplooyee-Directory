@@ -18,7 +18,6 @@ class EmployeeService {
       for (int i=0;i<response.data.length;i++){
         EmployeeModel model = EmployeeModel.fromJson(response.data[i]);
         modelList.add(model);
-        print('Inserting $model');
       }
       List<EmployeeDbModel> dbModelList = [];
       for(int i=0;i<modelList.length;i++ ){

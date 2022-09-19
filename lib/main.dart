@@ -24,16 +24,6 @@ class MyApp extends StatelessWidget {
         primaryColor: colorPrimary,
         backgroundColor: Colors.white,
         fontFamily: "Poppins",
-        textTheme: TextTheme(
-          bodyText2: const TextStyle(
-            fontSize: 14.0,
-          ),
-
-          bodyText1: TextStyle(
-            fontSize: 14.0,
-            color: colorPrimary,
-          ),
-        ),
         primarySwatch: Colors.blue,
 
       ),

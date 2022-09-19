@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:employee_app/Models/EmployeeModel.dart';
 import 'package:employee_app/Utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,7 @@ class _HomeState extends State<Home> {
           .where((text) =>
               text.name!.toLowerCase().contains(value.toLowerCase()) ||
               text.email!.toLowerCase().contains(value.toLowerCase()))
-          .toList(); // I don't understand your Word list.
+          .toList();
     });
   }
 
@@ -66,11 +68,10 @@ class _HomeState extends State<Home> {
 
   List<EmployeeModel> employeeList = [];
 
-  //
   getEmployeeList() async {
     try {
       employeeList = await EmployeeService.getEmployeeList();
-      showToast(employeeList.length.toString());
+      // showToast(employeeList.length.toString());
     } catch (e) {
       showErrorMessage(e);
     }
@@ -91,6 +92,8 @@ class _HomeState extends State<Home> {
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
+              Navigator.pop(context);
+
             },
             child: const Icon(
               Icons.arrow_back_ios,
@@ -111,7 +114,7 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _customAppBar(),
+            _searchBox(),
             Expanded(child: _buildEmployeeListView())
           ],
         )
@@ -165,7 +168,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _customAppBar() {
+  Widget _searchBox() {
     return Row(
       children: [
         Expanded(
@@ -187,18 +190,12 @@ class _HomeState extends State<Home> {
               contentPadding: const EdgeInsets.all(10),
               alignLabelWithHint: false,
               hintText: Strings.search,
-              // hintText: "Search makes, models or features...",
               hintStyle: const TextStyle(
-                color: Colors.black,
+                color: Colors.grey,
                 fontSize: 14,
                 fontFamily: 'Poppins_Regular',
               ),
               enabled: true,
-              prefixIcon: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                color: Colors.black,
-                onPressed: () => {Navigator.pop(context)},
-              ),
               suffixIcon: IconButton(
                   onPressed: () {
                     _searchQuery.clear();
